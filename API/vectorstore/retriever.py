@@ -41,7 +41,7 @@ def retriever(query: str):
     
 
 #save_file("./test_docs/attention.pdf")
-results = retriever("Attention Mechanism")
-print(results)
+#results = retriever("Attention Mechanism")
+#print(results)
     
     
