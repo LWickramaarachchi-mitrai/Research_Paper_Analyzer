@@ -8,10 +8,12 @@ dependencies = [
     "faiss-cpu>=1.13.2",
     "langchain>=1.2.16",
     "langchain-community>=0.4.1",
+    "langchain-google-genai>=4.2.2",
     "langchain-huggingface>=1.2.2",
     "langchain-ollama>=1.1.0",
     "langchain-text-splitters>=1.1.2",
     "langgraph>=1.1.10",
     "pypdf>=6.10.2",
+    "rank-bm25>=0.2.2",
     "sentence-transformers>=5.4.1",
 ]
