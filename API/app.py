@@ -61,3 +61,32 @@ if st.button("Analyze"):
 
             except Exception as e:
                 st.error(f"Error: {e}")
+                
+
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+st.subheader("💬 Chat with Paper")
+
+user_input = st.text_input("Ask a question")
+
+if st.button("Send"):
+    if user_input:
+        with st.spinner("Thinking..."):
+            response = requests.post(
+                "http://127.0.0.1:8000/chat",
+                json={
+                    "question": user_input,
+                    "history": st.session_state.chat_history
+                }
+            )
+
+            data = response.json()
+
+            if "answer" in data:
+                st.session_state.chat_history.append(
+                    {"role": "user", "content": user_input}
+                )
+                st.session_state.chat_history.append(
+                    {"role": "assistant", "content": data["answer"]}
+                )

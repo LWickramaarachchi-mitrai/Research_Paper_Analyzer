@@ -1,7 +1,8 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form,Body
 from pydantic import BaseModel
 import os, shutil, json
 from agents.research_agent import analyze_paper_llm_only
+from agents.chat_with_paper import chat_with_paper
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
@@ -70,3 +71,15 @@ async def analyze(
         return {
             "error": str(e)
         }
+        
+
+@app.post("/chat")
+async def chat(
+    question: str = Body(...),
+    history: list = Body(default=[])
+):
+    try:
+        answer = chat_with_paper(question, history)
+        return {"answer": answer}
+    except Exception as e:
+        return {"error": str(e)}
