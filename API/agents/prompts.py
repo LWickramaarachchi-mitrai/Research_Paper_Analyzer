@@ -21,30 +21,56 @@ Methodology
 Results
 Conclusion
 
-strictly in JSON format. NO JARGON.
+strictly  ONLY IN PURE JSON format. NO JARGON.
 
 '''
 
+
+
+""" def Structured_output_prompt(context):
+    return f'''
+Extract the following fields from the research paper from the given research paper scontext.
+
+Return ONLY valid JSON. No Jargon.
+below is the schema structure.
+
+Schema:
+{{
+  "title": "",
+  "authors": [] - list of authors of the research paper,
+  "abstract": "",
+  "problem_statement": "",
+  "methodology": "",
+  "results": "",
+  "conclusion": ""
+}}
+
+Paper:
+{context}
+
+''' """
 
 
 def Structured_output_prompt(context):
-    return f'''
-You are a research paper analyze agent.
-Analyze the given research paper content and give the structured output
+    return f"""
+Extract structured information from the research paper.
 
-Give a structured and descriptive output about the research paper 
-strictly in JSON format.
+Rules:
+- Keep each field concise (max 2–3 sentences)
+- Return ONLY valid JSON
+- Do NOT exceed output length
 
-Title 
-Authors 
-Abstract
-Problem_Statement
-Methodology
-Results
-Conclusion
+Schema:
+{{
+  "title": "",
+  "authors": [],
+  "abstract": "",
+  "problem_statement": "",
+  "methodology": "",
+  "results": "",
+  "conclusion": ""
+}}
 
-strictly in ONLY IN PURE JSON format. NO JARGON.
-
-CONTEXT : {context}
-
-'''
+Paper:
+{context}
+"""

@@ -7,10 +7,18 @@ from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import pickle
+from langchain_huggingface import HuggingFaceEmbeddings
 
 load_dotenv()
 
-embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+
+
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
+
+
+#embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
 
 def save_file(file_path: str):

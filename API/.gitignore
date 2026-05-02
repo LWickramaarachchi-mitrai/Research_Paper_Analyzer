@@ -4,4 +4,5 @@ FAISS_INDEX
 __pycache__
 CHROMA_DB
 bm25.pkl
-
+test_docs
+uploads
