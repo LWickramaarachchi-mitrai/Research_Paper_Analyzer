@@ -20,5 +20,6 @@ def search_database_tool(query: str):
         query: Search the query term that you looking for
     
     '''
+    print("Database tool executing.....")
     result = retriever(query)
     return result;

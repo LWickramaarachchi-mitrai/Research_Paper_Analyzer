@@ -1,4 +1,7 @@
 .venv
 .env
 FAISS_INDEX
+__pycache__
+CHROMA_DB
+bm25.pkl
 
