@@ -6,3 +6,4 @@ CHROMA_DB
 bm25.pkl
 test_docs
 uploads
+chat_memory.db
