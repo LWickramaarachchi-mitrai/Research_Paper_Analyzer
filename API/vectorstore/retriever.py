@@ -34,7 +34,7 @@ def save_file(file_path: str):
     )
     chunked_doc = splitter.split_documents(documents)
 
-    # -------- VECTOR STORE --------
+    
     vectorstore = Chroma(
         persist_directory="CHROMA_DB",
         embedding_function=embeddings
@@ -42,19 +42,19 @@ def save_file(file_path: str):
     vectorstore.add_documents(chunked_doc)
     vectorstore.persist()
 
-    # -------- BM25 --------
+    
     texts = [doc.page_content for doc in chunked_doc]
     tokenized_corpus = [text.split() for text in texts]
 
     bm25 = BM25Okapi(tokenized_corpus)
 
-    # save BM25 + docs
+    
     with open("bm25.pkl", "wb") as f:
         pickle.dump((bm25, chunked_doc), f)
   
  
 def retriever(query: str):
-    # -------- LOAD VECTOR DB --------
+    
     vectorstore = Chroma(
         persist_directory="CHROMA_DB",
         embedding_function=embeddings
@@ -62,14 +62,14 @@ def retriever(query: str):
 
     semantic_results = vectorstore.similarity_search(query, k=5)
 
-    # -------- LOAD BM25 --------
+    
     with open("bm25.pkl", "rb") as f:
         bm25, docs = pickle.load(f)
 
     tokenized_query = query.split()
     bm25_scores = bm25.get_scores(tokenized_query)
 
-    # get top BM25 docs
+    
     bm25_top_indices = sorted(
         range(len(bm25_scores)),
         key=lambda i: bm25_scores[i],
@@ -78,10 +78,10 @@ def retriever(query: str):
 
     bm25_results = [docs[i] for i in bm25_top_indices]
 
-    # -------- MERGE RESULTS --------
+    
     combined_docs = semantic_results + bm25_results
 
-    # remove duplicates
+    
     seen = set()
     unique_docs = []
     for doc in combined_docs:
@@ -89,7 +89,7 @@ def retriever(query: str):
             seen.add(doc.page_content)
             unique_docs.append(doc)
 
-    # -------- RERANK --------
+    
     pairs = [(query, doc.page_content) for doc in unique_docs]
     scores = reranker.predict(pairs)
 

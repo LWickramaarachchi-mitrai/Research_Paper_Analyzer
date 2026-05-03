@@ -2,14 +2,15 @@ from fastapi import FastAPI, UploadFile, File, Form,Body
 from pydantic import BaseModel
 import os, shutil, json
 from agents.research_agent import analyze_paper_llm_only
-from agents.chat_with_paper import chat_with_paper
+from agents.chat_with_paper import graph
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+from langchain_core.messages import HumanMessage
+
 load_dotenv()
 
 
 from vectorstore.retriever import save_file
-
 
 
 
@@ -30,6 +31,11 @@ app.add_middleware(
 # ---- request schema ----
 class AnalyzeRequest(BaseModel):
     query: str
+    
+    
+    
+
+
 
 # ---- upload endpoint ----
 @app.post("/upload")
@@ -73,13 +79,20 @@ async def analyze(
         }
         
 
+
+
+class ChatRequest(BaseModel):
+    message: str
+    thread_id: str
+
+
 @app.post("/chat")
-async def chat(
-    question: str = Body(...),
-    history: list = Body(default=[])
-):
-    try:
-        answer = chat_with_paper(question, history)
-        return {"answer": answer}
-    except Exception as e:
-        return {"error": str(e)}
+async def chat(req: ChatRequest):
+    result = graph.invoke(
+        {"messages": [HumanMessage(content=req.message)]},
+        config={"configurable": {"thread_id": req.thread_id}}
+    )
+
+    return {
+        "response": result["messages"][-1].content
+    }

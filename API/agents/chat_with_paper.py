@@ -1,51 +1,57 @@
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_groq import ChatGroq
+from agents.states import GraphState
 from vectorstore.retriever import retriever
 from dotenv import load_dotenv
 load_dotenv()
 
-llm = ChatGroq(
-    model="openai/gpt-oss-120b"
-)
+from langchain_core.messages import AIMessage
+from langgraph.graph import StateGraph, END
+import sqlite3
+from langgraph.checkpoint.sqlite import SqliteSaver
+
+conn = sqlite3.connect("chat_memory.db", check_same_thread=False)
+checkpointer = SqliteSaver(conn)
+
+llm = ChatGroq(model="openai/gpt-oss-120b")
 
 
-def build_prompt(context, question, chat_history):
-    history_text = "\n".join([
-        f"{msg['role']}: {msg['content']}"
-        for msg in chat_history
-    ])
+def chat_node(state: GraphState):
+    messages = state["messages"]
+    user_query = messages[-1].content
 
-    return f"""
-You are an AI assistant answering questions about a research paper.
+   
+    context = retriever(user_query)
 
-Use ONLY the provided context.
+    
 
-Chat History:
-{history_text}
+    system_prompt = f"""
+You are a research assistant.
+
+Use the context to answer.
+If not found, say you don't know.
 
 Context:
 {context}
-
-Question:
-{question}
-
-Answer clearly and concisely.
 """
 
+    response = llm.invoke([
+        {"role": "system", "content": system_prompt},
+        *messages
+    ])
 
-
-
-def chat_with_paper(question: str, chat_history: list):
+    return {
+        "messages": messages + [response]
+    }
     
-    # 🔍 Retrieve relevant chunks
-    context = retriever(question)
 
-    # 🔥 limit context (important)
-    context = context[:4000]
 
-    # 🧠 Build prompt
-    prompt = build_prompt(context, question, chat_history)
 
-    # 🤖 LLM
-    result = llm.invoke(prompt)
+builder = StateGraph(GraphState)
 
-    return result.content
+builder.add_node("chat", chat_node)
+
+builder.set_entry_point("chat")
+builder.add_edge("chat", END)
+
+graph = builder.compile(checkpointer=checkpointer)
