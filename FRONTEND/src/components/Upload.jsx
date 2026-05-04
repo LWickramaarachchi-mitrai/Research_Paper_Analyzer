@@ -2,14 +2,15 @@
 import { useState } from "react";
 import { uploadFile } from "../api/api";
 
-export default function Upload({ setUploaded }) {
-  const [file, setFile] = useState(null);
+export default function Upload({ setUploaded, setFile }) {
+  const [localFile, setLocalFile] = useState(null);
 
   const handleUpload = async () => {
-    if (!file) return alert("Upload a PDF");
+    if (!localFile) return alert("Upload a PDF");
 
     try {
-      await uploadFile(file);
+      await uploadFile(localFile);
+      setFile(localFile);        // 🔥 send file to parent
       setUploaded(true);
       alert("Uploaded!");
     } catch (err) {
@@ -24,7 +25,7 @@ export default function Upload({ setUploaded }) {
 
       <input
         type="file"
-        onChange={(e) => setFile(e.target.files[0])}
+        onChange={(e) => setLocalFile(e.target.files[0])}
         className="mb-3"
       />
 
