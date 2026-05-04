@@ -74,3 +74,17 @@ Automatically extracts:
 - Axios
 
 ---
+
+-Demo Run
+1. Install uv on your system
+1. cd API
+2. uv sync
+
+Backend - 
+1. CD API
+2. uv run uvicorn main:app --reload
+
+Frontend - 
+1. CD API  
+2. uv run streamlit run app.py
+
