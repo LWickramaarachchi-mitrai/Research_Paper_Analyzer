@@ -7,11 +7,14 @@ load_dotenv()
 
 from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph, END
-import sqlite3
-from langgraph.checkpoint.sqlite import SqliteSaver
 
-conn = sqlite3.connect("chat_memory.db", check_same_thread=False)
-checkpointer = SqliteSaver(conn)
+from langgraph.checkpoint.redis import RedisSaver
+from redis import Redis
+
+checkpointer = RedisSaver(
+    redis_url="redis://localhost:6379"
+)
+checkpointer.setup()
 
 llm = ChatGroq(model="openai/gpt-oss-120b")
 
