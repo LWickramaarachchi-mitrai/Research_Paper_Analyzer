@@ -6,6 +6,8 @@ from agents.chat_with_paper import graph
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
+from services.ChatMemory import save_message, get_chat_history
 
 load_dotenv()
 
@@ -88,11 +90,31 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
+
+    # ✅ Load history from MongoDB
+    history = get_chat_history(req.thread_id)
+
+    # Convert to LangChain messages
+    messages = []
+    for m in history:
+        if m["role"] == "user":
+            messages.append(HumanMessage(content=m["content"]))
+        else:
+            messages.append(AIMessage(content=m["content"]))
+
+    # Add new user message
+    messages.append(HumanMessage(content=req.message))
+
+    # Invoke LangGraph
     result = graph.invoke(
-        {"messages": [HumanMessage(content=req.message)]},
+        {"messages": messages},
         config={"configurable": {"thread_id": req.thread_id}}
     )
 
-    return {
-        "response": result["messages"][-1].content
-    }
+    response = result["messages"][-1].content
+
+    # ✅ Save to MongoDB
+    save_message(req.thread_id, "user", req.message)
+    save_message(req.thread_id, "assistant", response)
+
+    return {"response": response}
