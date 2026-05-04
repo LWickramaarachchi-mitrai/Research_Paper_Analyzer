@@ -1,18 +1,18 @@
-# 📄 Research Paper Analyzer & Chat (RAG + LangGraph)
+#  Research Paper Analyzer & Chat (RAG + LangGraph)
 
 An end-to-end AI-powered research assistant that enables you to:
 
-- 📊 Analyze research papers into structured insights  
-- 💬 Chat with papers using context-aware, multi-turn conversations  
-- 🔎 Retrieve accurate answers using hybrid search (BM25 + embeddings + reranking)  
+-  Analyze research papers into structured insights  
+-  Chat with papers using context-aware, multi-turn conversations  
+-  Retrieve accurate answers using hybrid search (BM25 + embeddings + reranking)  
 
 Built with **FastAPI, LangGraph, LangChain, React, and Tailwind CSS**.
 
 ---
 
-# 🚀 Features
+#  Features
 
-## 📊 Paper Analysis
+##  Paper Analysis
 Automatically extracts:
 - Title  
 - Authors  
@@ -24,7 +24,7 @@ Automatically extracts:
 
 ---
 
-## 💬 Chat with Paper
+##  Chat with Paper
 - Multi-turn conversation
 - Context-aware follow-ups
 - Memory persistence using LangGraph
@@ -33,7 +33,7 @@ Automatically extracts:
 
 ---
 
-## 🔎 Advanced Retrieval (RAG)
+##  Advanced Retrieval (RAG)
 - Semantic search (Chroma + embeddings(HuggingFace))
 - Keyword search (BM25)
 - Cross-encoder reranking
@@ -41,14 +41,14 @@ Automatically extracts:
 
 ---
 
-## 🧠 Memory System
+##  Memory System
 - LangGraph state management
 - SQLite-based persistence
 - Per-thread conversational memory
 
 ---
 
-## 🎨 Frontend (React + Tailwind)
+##  Frontend (React + Tailwind)
 - ChatGPT-style UI
 - Sidebar + main panel layout
 - Chat + Analyze modes
@@ -57,7 +57,7 @@ Automatically extracts:
 
 ---
 
-# 🏗️ Tech Stack
+#  Tech Stack
 
 ## Backend
 - FastAPI
