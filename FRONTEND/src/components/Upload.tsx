@@ -1,26 +1,30 @@
 import { useState } from "react";
 import { uploadFile } from "../api/api";
 
-export default function Upload({ setUploaded, setFile }) {
-  const [localFile, setLocalFile] = useState(null);
+type Props = {
+  setUploaded: (val: boolean) => void;
+  setFile: (file: File | null) => void;
+};
+
+export default function Upload({ setUploaded, setFile }: Props) {
+  const [file, setLocalFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const handleUpload = async () => {
-    if (!localFile) return alert("Upload a PDF");
+    if (!file) return alert("Upload a PDF");
 
     try {
       setLoading(true);
-      setProgress(0);
 
-      await uploadFile(localFile, (event) => {
+      await uploadFile(file, (event) => {
         const percent = Math.round(
-          (event.loaded * 100) / event.total
+          (event.loaded! * 100) / (event.total || 1)
         );
-        setProgress(percent); // 🔥 update progress
+        setProgress(percent);
       });
 
-      setFile(localFile);
+      setFile(file);
       setUploaded(true);
     } catch (err) {
       console.error(err);
@@ -36,33 +40,27 @@ export default function Upload({ setUploaded, setFile }) {
 
       <input
         type="file"
-        onChange={(e) => setLocalFile(e.target.files[0])}
+        onChange={(e) => setLocalFile(e.target.files?.[0] || null)}
         disabled={loading}
-        className="mb-3"
       />
 
       <button
         onClick={handleUpload}
         disabled={loading}
-        className={`px-4 py-2 rounded text-white ${
-          loading ? "bg-gray-400" : "bg-blue-500"
-        }`}
+        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
       >
         {loading ? "Uploading..." : "Upload"}
       </button>
 
-      {/* 🔥 Progress Bar */}
       {loading && (
-        <div className="mt-4">
-          <div className="w-full bg-gray-200 rounded-full h-3">
+        <div className="mt-3">
+          <div className="w-full bg-gray-200 h-3 rounded">
             <div
-              className="bg-blue-500 h-3 rounded-full transition-all duration-300"
+              className="bg-blue-500 h-3 rounded"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-sm mt-1 text-gray-600">
-            {progress}%
-          </p>
+          <p>{progress}%</p>
         </div>
       )}
     </div>
