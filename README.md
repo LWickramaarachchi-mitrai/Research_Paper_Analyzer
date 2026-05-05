@@ -6,7 +6,7 @@ An end-to-end AI-powered research assistant that enables you to:
 -  Chat with papers using context-aware, multi-turn conversations  
 -  Retrieve accurate answers using hybrid search (BM25 + embeddings + reranking)  
 
-Built with **FastAPI, LangGraph, LangChain, React, and Tailwind CSS**.
+Built with **FastAPI, MongoDB, Redis, LangGraph, LangChain, TypeScript, and Tailwind CSS**.
 
 ---
 
@@ -66,10 +66,11 @@ Automatically extracts:
 - ChromaDB
 - BM25 (rank_bm25)
 - SentenceTransformers (reranker)
-- SQLite (chat memory)
+- Redis (short term chat memory caching)
+- MongoDB for chat history (thread wise)
 
 ## Frontend
-- React (Vite)
+- TypeScript
 - Tailwind CSS
 - Axios
 
@@ -85,6 +86,6 @@ Backend -
 2. uv run uvicorn main:app --reload
 
 Frontend - 
-1. CD API  
-2. uv run streamlit run app.py
+1. CD FRONTEND  
+2. npm run dev
 
