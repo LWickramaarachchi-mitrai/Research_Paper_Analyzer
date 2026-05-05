@@ -27,28 +27,7 @@ strictly  ONLY IN PURE JSON format. NO JARGON.
 
 
 
-""" def Structured_output_prompt(context):
-    return f'''
-Extract the following fields from the research paper from the given research paper scontext.
 
-Return ONLY valid JSON. No Jargon.
-below is the schema structure.
-
-Schema:
-{{
-  "title": "",
-  "authors": [] - list of authors of the research paper,
-  "abstract": "",
-  "problem_statement": "",
-  "methodology": "",
-  "results": "",
-  "conclusion": ""
-}}
-
-Paper:
-{context}
-
-''' """
 
 
 def Structured_output_prompt(context):
