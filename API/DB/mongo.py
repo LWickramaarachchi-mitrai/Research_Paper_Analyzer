@@ -7,9 +7,9 @@ if not MONGO_URI:
 
 client = MongoClient(MONGO_URI)
 
-# DB + Collection
+
 db = client["research_assistant"]
 chat_collection = db["chats"]
 
-# Optional: create index for faster queries
+
 chat_collection.create_index("thread_id", unique=True)

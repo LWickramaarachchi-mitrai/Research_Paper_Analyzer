@@ -63,3 +63,22 @@ export const chatWithPaper = async (
 
   return res.data;
 };
+
+export type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export const getThreads = () => {
+  return axios.get<{ threads: string[] }>(`${BASE_URL}/threads`);
+};
+
+export const getChatHistory = (thread_id: string) => {
+  return axios.get<{ messages: ChatMessage[] }>(
+    `${BASE_URL}/chat/${thread_id}`
+  );
+};
+
+export const deleteThread = (thread_id: string) => {
+  return axios.delete(`${BASE_URL}/chat/${thread_id}`);
+};
