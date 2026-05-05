@@ -1,6 +1,11 @@
 from pymongo import MongoClient
 import os
-MONGO_URI = "mongodb+srv://linwick679_db_user:x6pF9Zg99xWZf5Ky@cluster0.kuu5v5r.mongodb.net/research_rag?retryWrites=true&w=majority"
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
+MONGO_URI= os.getenv('MONGO_URI')
 
 if not MONGO_URI:
     raise ValueError("MONGO_URI not found in environment variables")
